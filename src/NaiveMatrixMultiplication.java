@@ -15,6 +15,12 @@ class NaiveMatrixMultiplication {
 
     }
 
+    static void fill(double[][] M, int m, int n, Random gen) {
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                M[i][j] = gen.nextDouble();
+    }
+
     // We should probably make a Matrix an object
     public static void main(String[] args) {
         Random gen = new Random(0); // set seed to obtain deterministic results
@@ -24,16 +30,10 @@ class NaiveMatrixMultiplication {
         double B[][] = new double[p][n];
         double C[][] = new double[m][n];
 
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < p; j++)
-                A[i][j] = gen.nextDouble();
-
+        fill(A, m, p, gen);
         print(A, m, p, "A");
 
-        for (int i = 0; i < p; i++)
-            for (int j = 0; j < n; j++)
-                B[i][j] = gen.nextDouble();
-
+        fill(B, p, n, gen);
         print(B, p, n, "B");
 
         for (int i = 0; i < m; i++)
