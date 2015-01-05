@@ -38,21 +38,25 @@ class ThreadingTest001 {
         return ans;
     }
 
+    static int seqsum(int[] arr) {
+        int len = arr.length;
+        int ans = 0;
+
+        for (int i = 0; i < len; i++)
+            ans += arr[i];
+
+        return ans;
+    }
+
     public static void main(String[] args) throws InterruptedException {
         final int n = 1000;
         int[] arr = new int[n];
 
         // Initialization for dummy test
         for (int i = 0; i < n; i++)
-            arr[i] = n - i; 
+            arr[i] = n - i;
 
-        // Sequential sum
-        int ans = 0;
-        for (int i = 0; i < n; i++)
-            ans += arr[i];
-
-        System.out.println("Sequential sum gives: " + ans);
-
+        System.out.println("Sequential sum gives: " + seqsum(arr));
         System.out.println("Threaded sum gives: " + sum(arr));
     }
 }
