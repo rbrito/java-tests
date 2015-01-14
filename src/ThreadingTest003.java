@@ -12,6 +12,10 @@ class SumThread extends Thread {
 
     public void run() { // override from Thread
         if (hi - lo < SEQUENTIAL_CUTOFF) {
+            // notice that only this thread is writing onto the variable
+            // ans, as there is one such variable for each instance of
+            // SumThread (and each thread is in 1-to-1 correspondence with
+            // the instance of SumThread).
             for (int i = lo; i < hi; i++) {
                 ans += arr[i];
             }
