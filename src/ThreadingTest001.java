@@ -1,11 +1,11 @@
 import java.lang.Thread;
 
-class SumThread extends Thread {
+class SumThread001 extends Thread {
     int lo, hi; // fields for communicating inputs
     int[] arr;
     int ans = 0; // for communicating output
 
-    SumThread(int[] a, int l, int h) {
+    SumThread001(int[] a, int l, int h) {
         lo = l; hi = h; arr = a;
     }
 
@@ -22,10 +22,10 @@ class ThreadingTest001 {
 
         // Here we lauch the threads to perform the computation. The number
         // of threads is hardcoded to be exactly 4 for simplicity.
-        SumThread[] ts = new SumThread[4];
+        SumThread001[] ts = new SumThread001[4];
 
         for (int i = 0; i < 4; i++) {
-            ts[i] = new SumThread(arr, (i*len)/4, ((i+1)*len)/4);
+            ts[i] = new SumThread001(arr, (i*len)/4, ((i+1)*len)/4);
             ts[i].start();
         }
 

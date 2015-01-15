@@ -1,12 +1,12 @@
 import java.lang.Thread;
 
-class SumThread extends Thread {
+class SumThread003 extends Thread {
     static int SEQUENTIAL_CUTOFF = 1000; // arbitrary
     int lo, hi; // fields for communicating inputs
     int[] arr;
     int ans = 0; // for communicating output
 
-    SumThread(int[] a, int l, int h) {
+    SumThread003(int[] a, int l, int h) {
         lo = l; hi = h; arr = a;
     }
 
@@ -21,8 +21,8 @@ class SumThread extends Thread {
             }
         } else {
             try {
-                SumThread left = new SumThread(arr, lo, (lo+hi)/2);
-                SumThread right = new SumThread(arr, (lo+hi)/2, hi);
+                SumThread003 left = new SumThread003(arr, lo, (lo+hi)/2);
+                SumThread003 right = new SumThread003(arr, (lo+hi)/2, hi);
                 left.start();
                 right.start();
                 left.join();
@@ -36,7 +36,7 @@ class SumThread extends Thread {
 
 class ThreadingTest003 {
     static int sum(int[] arr) {
-        SumThread t = new SumThread(arr, 0, arr.length);
+        SumThread003 t = new SumThread003(arr, 0, arr.length);
         t.run(); // *not* start
         return t.ans;
     }
