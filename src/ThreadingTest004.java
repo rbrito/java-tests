@@ -34,7 +34,7 @@ class SumThread extends Thread {
     }
 }
 
-class ThreadingTest003 {
+class ThreadingTest004 {
     static int sum(int[] arr) {
         SumThread t = new SumThread(arr, 0, arr.length);
         t.run(); // *not* start
