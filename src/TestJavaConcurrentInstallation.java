@@ -1,3 +1,11 @@
+/* This can be compiled with gcj (as packaged in Debian) if you:
+
+   wget http://gee.cs.oswego.edu/dl/jsr166/dist/jsr166.jar
+   ecj-gcj -cp jsr166.jar TestJavaConcurrentInstallation.java
+
+   Notice that we are using ecj-gcj here instead of pure gcj.
+*/
+
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
