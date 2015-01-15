@@ -32,6 +32,6 @@ public class TestJavaConcurrentInstallation {
         // Idiom: Pass arguments to the thread by sending them to the
         // constructor of the class that implements the task.
         int fortyThree = fjPool.invoke(new Incrementor(42));
-        
+        System.out.println(fortyThree);
     }
 }
