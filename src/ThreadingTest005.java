@@ -1,42 +1,44 @@
-import java.lang.Thread;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
 
-class SumThread005 extends Thread {
-    static int SEQUENTIAL_CUTOFF = 1000; // arbitrary
+class SumArray005 extends RecursiveAction {
+    static int SEQUENTIAL_CUTOFF = 1000;
+
     int lo, hi; // fields for communicating inputs
     int[] arr;
     int ans = 0; // for communicating output
 
-    SumThread005(int[] a, int l, int h) {
+    SumArray005(int[] a, int l, int h) {
         lo = l; hi = h; arr = a;
     }
 
-    public void run() { // override from Thread
-        if (hi - lo < SEQUENTIAL_CUTOFF) {
-            // notice that only this thread is writing onto the variable
-            // ans, as there is one such variable for each instance of
-            // SumThread (and each thread is in 1-to-1 correspondence with
-            // the instance of SumThread).
+    protected void compute() { // override from RecursiveAction
+        if (hi - lo <= SEQUENTIAL_CUTOFF) {
             for (int i = lo; i < hi; i++) {
                 ans += arr[i];
             }
         } else {
-            try {
-                SumThread005 left = new SumThread005(arr, lo, (lo+hi)/2);
-                SumThread005 right = new SumThread005(arr, (lo+hi)/2, hi);
-                left.start();
-                right.run();
-                left.join();
-                ans = left.ans + right.ans;
-            } catch (InterruptedException e) {
-            }
+            // No need for the try-catch block as with Thread
+            SumArray005 left = new SumArray005(arr, lo, (lo+hi)/2);
+            SumArray005 right = new SumArray005(arr, (lo+hi)/2, hi);
+            left.fork(); // *not* start
+            right.compute(); // call `compute` to halve the number of threads
+            left.join();
+            ans = left.ans + right.ans;
         }
     }
 }
 
 class ThreadingTest005 {
+    // Only one for `ForkJoinPool` the whole program.
+    static final ForkJoinPool fjPool = new ForkJoinPool();
+
+
     static int sum(int[] arr) {
-        SumThread005 t = new SumThread005(arr, 0, arr.length);
-        t.run(); // *not* start
+        SumArray005 t = new SumArray005(arr, 0, arr.length);
+        // Note the inclusion of the Action into the Pool.
+        fjPool.invoke(t);
+
         return t.ans;
     }
 
