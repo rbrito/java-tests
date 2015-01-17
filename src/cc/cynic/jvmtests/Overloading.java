@@ -1,4 +1,5 @@
 package cc.cynic.jvmtests;
+
 class Overloading {
     static void f(int a, int b) {
         System.out.println("Inside the int function.");

@@ -1,4 +1,5 @@
 package cc.cynic.jvmtests;
+
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
@@ -10,7 +11,9 @@ class SumArray006 extends RecursiveAction {
     int ans = 0; // for communicating output
 
     SumArray006(int[] a, int l, int h) {
-        lo = l; hi = h; arr = a;
+        lo = l;
+        hi = h;
+        arr = a;
     }
 
     protected void compute() { // override from RecursiveAction
@@ -20,8 +23,8 @@ class SumArray006 extends RecursiveAction {
             }
         } else {
             // No need for the try-catch block as with Thread
-            SumArray006 left = new SumArray006(arr, lo, (lo+hi)/2);
-            SumArray006 right = new SumArray006(arr, (lo+hi)/2, hi);
+            SumArray006 left = new SumArray006(arr, lo, (lo + hi) / 2);
+            SumArray006 right = new SumArray006(arr, (lo + hi) / 2, hi);
             left.fork(); // *not* start
             right.compute(); // call `compute` to halve the number of threads
             left.join();

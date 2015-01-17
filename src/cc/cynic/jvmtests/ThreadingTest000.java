@@ -1,9 +1,12 @@
 package cc.cynic.jvmtests;
+
 class T extends Thread {
     int id;
+
     T(int i) {
         id = i;
     }
+
     public void run() {
         System.out.println("Hi from thread " + id + ".");
         System.out.println("Bye from thread " + id + ".");

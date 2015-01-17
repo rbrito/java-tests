@@ -1,4 +1,5 @@
 package cc.cynic.jvmtests;
+
 import java.util.Random;
 
 class NaiveMatrixMultiplication {
@@ -22,7 +23,8 @@ class NaiveMatrixMultiplication {
                 M[i][j] = gen.nextDouble();
     }
 
-    static void multiply(double[][] A, int m, int p, double[][] B, int n, double[][] C) {
+    static void multiply(double[][] A, int m, int p, double[][] B, int n,
+            double[][] C) {
         for (int i = 0; i < m; i++)
             for (int j = 0; j < n; j++)
                 for (int k = 0; k < p; k++)

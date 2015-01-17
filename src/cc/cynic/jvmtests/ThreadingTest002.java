@@ -1,4 +1,5 @@
 package cc.cynic.jvmtests;
+
 import java.lang.Thread;
 
 class SumThread002 extends Thread {
@@ -7,7 +8,9 @@ class SumThread002 extends Thread {
     int ans = 0; // for communicating output
 
     SumThread002(int[] a, int l, int h) {
-        lo = l; hi = h; arr = a;
+        lo = l;
+        hi = h;
+        arr = a;
     }
 
     public void run() { // override from Thread
@@ -15,8 +18,8 @@ class SumThread002 extends Thread {
             ans = arr[lo];
         } else {
             try {
-                SumThread002 left = new SumThread002(arr, lo, (lo+hi)/2);
-                SumThread002 right = new SumThread002(arr, (lo+hi)/2, hi);
+                SumThread002 left = new SumThread002(arr, lo, (lo + hi) / 2);
+                SumThread002 right = new SumThread002(arr, (lo + hi) / 2, hi);
                 left.start();
                 right.start();
                 left.join();
