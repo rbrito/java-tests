@@ -1,3 +1,4 @@
+package cc.cynic.jvmtests;
 import java.lang.Thread;
 
 class SumThread003 extends Thread {

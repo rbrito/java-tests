@@ -1,3 +1,4 @@
+package cc.cynic.jvmtests;
 /* This can be compiled with gcj (as packaged in Debian) if you:
 
    wget http://gee.cs.oswego.edu/dl/jsr166/dist/jsr166.jar

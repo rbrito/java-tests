@@ -1,3 +1,4 @@
+package cc.cynic.jvmtests;
 import java.util.Random;
 
 class NaiveMatrixMultiplication {

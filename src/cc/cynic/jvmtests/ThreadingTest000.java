@@ -1,3 +1,4 @@
+package cc.cynic.jvmtests;
 class T extends Thread {
     int id;
     T(int i) {
