@@ -3,14 +3,14 @@ package cc.cynic.jvmtests;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
-class SumArray006 extends RecursiveAction {
+class SumArray007 extends RecursiveAction {
     static int SEQUENTIAL_CUTOFF = 1000;
 
     int lo, hi; // fields for communicating inputs
     int[] arr;
     int ans = 0; // for communicating output
 
-    SumArray006(int[] a, int l, int h) {
+    SumArray007(int[] a, int l, int h) {
         lo = l;
         hi = h;
         arr = a;
@@ -23,8 +23,8 @@ class SumArray006 extends RecursiveAction {
             }
         } else {
             // No need for the try-catch block as with Thread
-            SumArray006 left = new SumArray006(arr, lo, (lo + hi) / 2);
-            SumArray006 right = new SumArray006(arr, (lo + hi) / 2, hi);
+            SumArray007 left = new SumArray007(arr, lo, (lo + hi) / 2);
+            SumArray007 right = new SumArray007(arr, (lo + hi) / 2, hi);
             left.fork(); // *not* start
             right.compute(); // call `compute` to halve the number of threads
             left.join();
@@ -33,12 +33,12 @@ class SumArray006 extends RecursiveAction {
     }
 }
 
-class ThreadingTest006 {
+class ThreadingTest007 {
     // Only one for `ForkJoinPool` the whole program.
     static final ForkJoinPool fjPool = new ForkJoinPool();
 
     static int sum(int[] arr) {
-        SumArray006 t = new SumArray006(arr, 0, arr.length);
+        SumArray007 t = new SumArray007(arr, 0, arr.length);
         // Note the inclusion of the Action into the Pool.
         fjPool.invoke(t);
 
