@@ -1,14 +1,13 @@
 package cc.cynic.jvmtests;
 
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.RecursiveTask;
 
-class SumArray007 extends RecursiveAction {
+class SumArray007 extends RecursiveTask<Integer> {
     static int SEQUENTIAL_CUTOFF = 1000;
 
     int lo, hi; // fields for communicating inputs
     int[] arr;
-    int ans = 0; // for communicating output
 
     SumArray007(int[] a, int l, int h) {
         lo = l;
@@ -16,19 +15,21 @@ class SumArray007 extends RecursiveAction {
         arr = a;
     }
 
-    protected void compute() { // override from RecursiveAction
+    protected Integer compute() { // override from RecursiveTask
         if (hi - lo <= SEQUENTIAL_CUTOFF) {
+            int ans = 0;
             for (int i = lo; i < hi; i++) {
                 ans += arr[i];
             }
+            return ans;
         } else {
             // No need for the try-catch block as with Thread
             SumArray007 left = new SumArray007(arr, lo, (lo + hi) / 2);
             SumArray007 right = new SumArray007(arr, (lo + hi) / 2, hi);
             left.fork(); // *not* start
-            right.compute(); // call `compute` to halve the number of threads
-            left.join();
-            ans = left.ans + right.ans;
+            int rightAns = right.compute(); // call `compute` to halve the number of threads
+            int leftAns = left.join();
+            return leftAns + rightAns;
         }
     }
 }
@@ -39,10 +40,8 @@ class ThreadingTest007 {
 
     static int sum(int[] arr) {
         SumArray007 t = new SumArray007(arr, 0, arr.length);
-        // Note the inclusion of the Action into the Pool.
-        fjPool.invoke(t);
-
-        return t.ans;
+        // Note the inclusion of the Task into the Pool.
+        return fjPool.invoke(t);
     }
 
     static int seqsum(int[] arr) {
