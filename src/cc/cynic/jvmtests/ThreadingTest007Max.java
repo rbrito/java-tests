@@ -17,12 +17,7 @@ class MaxFinder extends RecursiveTask<Integer> {
 
     protected Integer compute() { // override from RecursiveTask
         if (hi - lo <= SEQUENTIAL_CUTOFF) {
-            int ans = Integer.MIN_VALUE; // "minus infinity" (not good style)
-            for (int i = lo; i < hi; i++) {
-                if (arr[i] > ans)
-                    ans = arr[i];
-            }
-            return ans;
+            return seqmax(arr);
         } else {
             // No need for the try-catch block as with Thread
             MaxFinder left = new MaxFinder(arr, lo, (lo + hi) / 2);
@@ -32,17 +27,6 @@ class MaxFinder extends RecursiveTask<Integer> {
             int leftAns = left.join();
             return (leftAns > rightAns) ? leftAns : rightAns;
         }
-    }
-}
-
-class ThreadingTest007Max {
-    // Only one for `ForkJoinPool` the whole program.
-    static final ForkJoinPool fjPool = new ForkJoinPool();
-
-    static int max(int[] arr) {
-        MaxFinder t = new MaxFinder(arr, 0, arr.length);
-        // Note the inclusion of the Task into the Pool.
-        return fjPool.invoke(t);
     }
 
     static int seqmax(int[] arr) {
@@ -55,6 +39,18 @@ class ThreadingTest007Max {
 
         return ans;
     }
+}
+
+
+class ThreadingTest007Max {
+    // Only one for `ForkJoinPool` the whole program.
+    static final ForkJoinPool fjPool = new ForkJoinPool();
+
+    static int max(int[] arr) {
+        MaxFinder t = new MaxFinder(arr, 0, arr.length);
+        // Note the inclusion of the Task into the Pool.
+        return fjPool.invoke(t);
+    }
 
     public static void main(String[] args) {
         final int n = 10000;
@@ -64,7 +60,7 @@ class ThreadingTest007Max {
         for (int i = 0; i < n; i++)
             arr[i] = n - i;
 
-        System.out.println("Sequential max gives: " + seqmax(arr));
+        System.out.println("Sequential max gives: " + MaxFinder.seqmax(arr));
         System.out.println("Threaded max gives: " + max(arr));
     }
 }
