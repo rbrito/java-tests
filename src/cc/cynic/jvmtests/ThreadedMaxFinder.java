@@ -3,7 +3,7 @@ package cc.cynic.jvmtests;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
-class MaxFinder extends RecursiveTask<Integer> {
+class ThreadedMaxFinder extends RecursiveTask<Integer> {
     static int SEQUENTIAL_CUTOFF = 1000;
 
     // Only one for `ForkJoinPool` the whole program.
@@ -50,9 +50,6 @@ class MaxFinder extends RecursiveTask<Integer> {
         return fjPool.invoke(t);
     }
 
-}
-
-class ThreadingTest007Max {
     /** Initialization for dummy test */
     static void initarray(int[] arr, final int n) {
         for (int i = 0; i < n; i++)
