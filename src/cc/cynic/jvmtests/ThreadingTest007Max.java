@@ -6,6 +6,9 @@ import java.util.concurrent.RecursiveTask;
 class MaxFinder extends RecursiveTask<Integer> {
     static int SEQUENTIAL_CUTOFF = 1000;
 
+    // Only one for `ForkJoinPool` the whole program.
+    static final ForkJoinPool fjPool = new ForkJoinPool();
+
     int lo, hi; // fields for communicating inputs
     int[] arr;
 
@@ -23,7 +26,8 @@ class MaxFinder extends RecursiveTask<Integer> {
             MaxFinder left = new MaxFinder(arr, lo, (lo + hi) / 2);
             MaxFinder right = new MaxFinder(arr, (lo + hi) / 2, hi);
             left.fork(); // *not* start
-            int rightAns = right.compute(); // call `compute` to halve the number of threads
+            int rightAns = right.compute(); // call `compute` to halve the
+                                            // number of threads
             int leftAns = left.join();
             return (leftAns > rightAns) ? leftAns : rightAns;
         }
@@ -39,12 +43,6 @@ class MaxFinder extends RecursiveTask<Integer> {
 
         return ans;
     }
-}
-
-
-class ThreadingTest007Max {
-    // Only one for `ForkJoinPool` the whole program.
-    static final ForkJoinPool fjPool = new ForkJoinPool();
 
     static int max(int[] arr) {
         MaxFinder t = new MaxFinder(arr, 0, arr.length);
@@ -52,15 +50,22 @@ class ThreadingTest007Max {
         return fjPool.invoke(t);
     }
 
+}
+
+class ThreadingTest007Max {
+    /** Initialization for dummy test */
+    static void initarray(int[] arr, final int n) {
+        for (int i = 0; i < n; i++)
+            arr[i] = n - i;
+    }
+
     public static void main(String[] args) {
         final int n = 10000;
         int[] arr = new int[n];
 
-        // Initialization for dummy test
-        for (int i = 0; i < n; i++)
-            arr[i] = n - i;
+        initarray(arr, n);
 
         System.out.println("Sequential max gives: " + MaxFinder.seqmax(arr));
-        System.out.println("Threaded max gives: " + max(arr));
+        System.out.println("Threaded max gives: " + MaxFinder.max(arr));
     }
 }
