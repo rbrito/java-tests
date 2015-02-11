@@ -12,7 +12,7 @@ class ThreadedMaxFinder extends RecursiveTask<Integer> {
     int lo, hi; // fields for communicating inputs
     int[] arr;
 
-    MaxFinder(int[] a, int l, int h) {
+    ThreadedMaxFinder(int[] a, int l, int h) {
         lo = l;
         hi = h;
         arr = a;
@@ -23,8 +23,8 @@ class ThreadedMaxFinder extends RecursiveTask<Integer> {
             return seqmax(arr);
         } else {
             // No need for the try-catch block as with Thread
-            MaxFinder left = new MaxFinder(arr, lo, (lo + hi) / 2);
-            MaxFinder right = new MaxFinder(arr, (lo + hi) / 2, hi);
+            ThreadedMaxFinder left = new ThreadedMaxFinder(arr, lo, (lo + hi) / 2);
+            ThreadedMaxFinder right = new ThreadedMaxFinder(arr, (lo + hi) / 2, hi);
             left.fork(); // *not* start
             int rightAns = right.compute(); // call `compute` to halve the
                                             // number of threads
@@ -45,7 +45,7 @@ class ThreadedMaxFinder extends RecursiveTask<Integer> {
     }
 
     static int max(int[] arr) {
-        MaxFinder t = new MaxFinder(arr, 0, arr.length);
+        ThreadedMaxFinder t = new ThreadedMaxFinder(arr, 0, arr.length);
         // Note the inclusion of the Task into the Pool.
         return fjPool.invoke(t);
     }
@@ -62,7 +62,7 @@ class ThreadedMaxFinder extends RecursiveTask<Integer> {
 
         initarray(arr, n);
 
-        System.out.println("Sequential max gives: " + MaxFinder.seqmax(arr));
-        System.out.println("Threaded max gives: " + MaxFinder.max(arr));
+        System.out.println("Sequential max gives: " + ThreadedMaxFinder.seqmax(arr));
+        System.out.println("Threaded max gives: " + ThreadedMaxFinder.max(arr));
     }
 }
