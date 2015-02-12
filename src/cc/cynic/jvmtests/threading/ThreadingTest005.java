@@ -1,47 +1,48 @@
-package cc.cynic.jvmtests;
+package cc.cynic.jvmtests.threading;
 
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.RecursiveAction;
 
-class SumArray007 extends RecursiveTask<Integer> {
+class SumArray005 extends RecursiveAction {
     static int SEQUENTIAL_CUTOFF = 1000;
 
     int lo, hi; // fields for communicating inputs
     int[] arr;
+    int ans = 0; // for communicating output
 
-    SumArray007(int[] a, int l, int h) {
+    SumArray005(int[] a, int l, int h) {
         lo = l;
         hi = h;
         arr = a;
     }
 
-    protected Integer compute() { // override from RecursiveTask
+    protected void compute() { // override from RecursiveAction
         if (hi - lo <= SEQUENTIAL_CUTOFF) {
-            int ans = 0;
             for (int i = lo; i < hi; i++) {
                 ans += arr[i];
             }
-            return ans;
         } else {
             // No need for the try-catch block as with Thread
-            SumArray007 left = new SumArray007(arr, lo, (lo + hi) / 2);
-            SumArray007 right = new SumArray007(arr, (lo + hi) / 2, hi);
+            SumArray005 left = new SumArray005(arr, lo, (lo + hi) / 2);
+            SumArray005 right = new SumArray005(arr, (lo + hi) / 2, hi);
             left.fork(); // *not* start
-            int rightAns = right.compute(); // call `compute` to halve the number of threads
-            int leftAns = left.join();
-            return leftAns + rightAns;
+            right.compute(); // call `compute` to halve the number of threads
+            left.join();
+            ans = left.ans + right.ans;
         }
     }
 }
 
-class ThreadingTest007 {
+class ThreadingTest005 {
     // Only one for `ForkJoinPool` the whole program.
     static final ForkJoinPool fjPool = new ForkJoinPool();
 
     static int sum(int[] arr) {
-        SumArray007 t = new SumArray007(arr, 0, arr.length);
-        // Note the inclusion of the Task into the Pool.
-        return fjPool.invoke(t);
+        SumArray005 t = new SumArray005(arr, 0, arr.length);
+        // Note the inclusion of the Action into the Pool.
+        fjPool.invoke(t);
+
+        return t.ans;
     }
 
     static int seqsum(int[] arr) {

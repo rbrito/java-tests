@@ -1,4 +1,4 @@
-package cc.cynic.jvmtests;
+package cc.cynic.jvmtests.threading;
 
 /* This can be compiled with gcj (as packaged in Debian) if you:
 

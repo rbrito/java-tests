@@ -1,35 +1,29 @@
-package cc.cynic.jvmtests;
+package cc.cynic.jvmtests.threading;
 
 import java.lang.Thread;
 
-class SumThread004 extends Thread {
-    static int SEQUENTIAL_CUTOFF = 1000; // arbitrary
+class SumThread002 extends Thread {
     int lo, hi; // fields for communicating inputs
     int[] arr;
     int ans = 0; // for communicating output
 
-    SumThread004(int[] a, int l, int h) {
+    SumThread002(int[] a, int l, int h) {
         lo = l;
         hi = h;
         arr = a;
     }
 
     public void run() { // override from Thread
-        if (hi - lo < SEQUENTIAL_CUTOFF) {
-            // notice that only this thread is writing onto the variable
-            // ans, as there is one such variable for each instance of
-            // SumThread (and each thread is in 1-to-1 correspondence with
-            // the instance of SumThread).
-            for (int i = lo; i < hi; i++) {
-                ans += arr[i];
-            }
+        if (hi - lo == 1) {
+            ans = arr[lo];
         } else {
             try {
-                SumThread004 left = new SumThread004(arr, lo, (lo + hi) / 2);
-                SumThread004 right = new SumThread004(arr, (lo + hi) / 2, hi);
+                SumThread002 left = new SumThread002(arr, lo, (lo + hi) / 2);
+                SumThread002 right = new SumThread002(arr, (lo + hi) / 2, hi);
                 left.start();
-                right.run();
+                right.start();
                 left.join();
+                right.join();
                 ans = left.ans + right.ans;
             } catch (InterruptedException e) {
             }
@@ -37,9 +31,9 @@ class SumThread004 extends Thread {
     }
 }
 
-class ThreadingTest004 {
+class ThreadingTest002 {
     static int sum(int[] arr) {
-        SumThread004 t = new SumThread004(arr, 0, arr.length);
+        SumThread002 t = new SumThread002(arr, 0, arr.length);
         t.run(); // *not* start
         return t.ans;
     }
@@ -55,7 +49,7 @@ class ThreadingTest004 {
     }
 
     public static void main(String[] args) {
-        final int n = 10000;
+        final int n = 1000;
         int[] arr = new int[n];
 
         // Initialization for dummy test

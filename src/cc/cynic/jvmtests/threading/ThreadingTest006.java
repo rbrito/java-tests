@@ -1,4 +1,4 @@
-package cc.cynic.jvmtests;
+package cc.cynic.jvmtests.threading;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
