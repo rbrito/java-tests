@@ -1,6 +1,6 @@
 package cc.cynic.jvmtests;
 
-public class TestFloatingPoint {
+public class FloatingPoint {
     public static void main(String[] args) {
         double inf = 1.0 / 0.0;
         double neginf = -1.0 / 0.0;
