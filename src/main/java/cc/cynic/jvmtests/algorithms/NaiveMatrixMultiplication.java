@@ -1,4 +1,4 @@
-package cc.cynic.jvmtests;
+package cc.cynic.jvmtests.algorithms;
 
 import java.util.Random;
 
